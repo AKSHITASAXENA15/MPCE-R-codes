@@ -1,0 +1,34 @@
+# Load necessary libraries
+library(forecast)
+library(ggplot2)
+
+# Input data
+years <- 1987:2009
+average_mpce_urban <- c(254.18, 269.77, 285.35, 455.00, 346.76, 384.35, 500.58, 496.91, 615.58, 625.07, 634.56, 718.68, 729.17, 732.58, 957.08, 1190.14, 1146.38, 1136.04, 1125.70, 1414.67,1451.35, 1490.35, 1527.63)
+
+# Convert to time series object
+mpce_ts <- ts(average_mpce_urban , start = 1987, frequency = 1)
+
+# Fit Holt's linear trend method
+holt_model <- holt(mpce_ts, h = 10, damped = FALSE)
+
+# Summary of the model
+summary(holt_model)
+
+# Plot fitted values and forecast
+autoplot(holt_model) +
+  ggtitle("Holt’s Linear Trend Forecast for Average MPCE- URBAN") +
+  xlab("Year") + ylab("Average MPCE")
+
+# Extract smoothing parameters
+alpha <- holt_model$model$par["alpha"]
+beta <- holt_model$model$par["beta"]
+cat("Alpha (level smoothing):", alpha, "\n")
+cat("Beta (trend smoothing):", beta, "\n")
+
+# Print final level and trend components
+final_state <- holt_model$model$state
+last_level <- final_state[nrow(final_state), "l"]
+last_trend <- final_state[nrow(final_state), "b"]
+cat("Final Level (l_t):", last_level, "\n")
+cat("Final Trend (b_t):", last_trend, "\n")
