@@ -1,0 +1,26 @@
+# Apply first-order differencing
+diff_mpce <- diff(mpce_ts)
+
+# Check stationarity again
+adf_result_diff <- adf.test(diff_mpce)
+print(adf_result_diff)
+
+if (adf_result_diff$p.value < 0.05) {
+  cat("After first differencing: The series is now stationary.\n")
+} else {
+  cat("After first differencing: The series is still non-stationary. Consider second differencing or other transformations.\n")
+}
+
+
+# Apply second-order differencing
+diff_mpce2 <- diff(diff_mpce)
+
+# Check stationarity again
+adf_result_diff2 <- adf.test(diff_mpce2)
+print(adf_result_diff2)
+
+if (adf_result_diff2$p.value < 0.05) {
+  cat("After second differencing: The series is now stationary.\n")
+} else {
+  cat("After second differencing: The series is still non-stationary. Consider further transformations.\n")
+}
