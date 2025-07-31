@@ -1,0 +1,46 @@
+#(i) Applying log transformation
+# Apply log transformation
+log_series <- log(mpce_ts)
+adf_result1 <- adf.test(log_series)
+
+# Print the result
+print(adf_result1)
+
+if (adf_result1$p.value < 0.05) {
+  cat("After log transformation: The series is now stationary.\n")
+} else {
+  cat("After log transformation: The series is still non-stationary. Consider further transformations.\n")
+}
+
+
+#(ii)	Applying square root transformation
+# Apply square root transformation
+sqrt_series <- sqrt(mpce_ts)
+adf_result2 <- adf.test(sqrt_series)
+
+# Print the result
+print(adf_result2)
+
+if (adf_result2$p.value < 0.05) {
+  cat("After square root transformation: The series is now stationary.\n")
+} else {
+  cat("After square root transformation: The series is still non-stationary. Consider further transformations.\n")
+}
+
+
+#(iii)	Applying Box-Cox transformation
+# Applying Box-Cox transformation
+library(forecast)
+lambda <- BoxCox.lambda(mpce_ts)
+bc_series <- BoxCox(mpce_ts, lambda)
+
+adf_result3 <- adf.test(bc_series)
+
+# Print the result
+print(adf_result3)
+
+if (adf_result3$p.value < 0.05) {
+  cat("After Box-Cox transformation: The series is now stationary.\n")
+} else {
+  cat("After Box-Cox transformation: The series is still non-stationary. Consider further transformations.\n")
+}
