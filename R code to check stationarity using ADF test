@@ -1,0 +1,22 @@
+# Load necessary package
+install.packages("tseries")
+library(tseries)
+
+# Create the data vectors
+year <- 1987:2009
+average_mpce <- c(195.31, 218.78, 242.25, 270.48, 298.71, 294.33, 336.33, 402.23, 477.02, 521.12, 565.21, 592.29, 619.36, 668.01, 711.22, 754.42, 752.59, 797.46, 966.74, 1105.99, 1115.19, 1124.67, 1133.87)
+
+# Create a time series object
+mpce_ts <- ts(average_mpce, start = 1987, end = 2009)
+# Run Augmented Dickey-Fuller test
+adf_result <- adf.test(mpce_ts)
+
+# Print the result
+print(adf_result)
+
+# Interpret the result
+if (adf_result$p.value < 0.05) {
+  cat("Conclusion: We reject the null hypothesis. The MPCE series is stationary.\n")
+} else {
+  cat("Conclusion: We fail to reject the null hypothesis. The MPCE series is non-stationary.\n")
+}
