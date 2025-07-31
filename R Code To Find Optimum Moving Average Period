@@ -1,0 +1,28 @@
+# Install and load required packages
+install.packages("TTR")
+library(TTR)
+# MPCE data
+average_mpce <- c(195.31, 218.78, 242.25, 270.48, 298.71, 294.33, 336.33, 402.23, 477.02, 521.12, 565.21, 592.29, 619.36, 668.01, 711.22, 754.42, 752.59, 797.46, 966.74, 1105.99, 1115.19, 1124.67, 1133.87)
+# Convert to time series object
+mpce_ts <- ts(average_mpce)
+# Define the periods you want to test
+periods <- c(3, 5, 7)
+# Initialize an empty data frame to store results
+mse_results <- data.frame(Period = integer(), MSE = numeric())
+# Loop over each period and calculate MSE
+for (p in periods) {
+  ma_series <- SMA(mpce_ts, n = p)
+  # Align lengths: drop NAs from moving average
+  valid_indices <- which(!is.na(ma_series))
+  original <- mpce_ts[valid_indices]
+  smoothed <- ma_series[valid_indices]
+  # Calculate MSE
+  mse <- mean((original - smoothed)^2)
+  # Store result
+  mse_results <- rbind(mse_results, data.frame(Period = p, MSE = mse))
+}
+# Print MSE results
+print(mse_results)
+# Find the optimal period (lowest MSE)
+optimal <- mse_results[which.min(mse_results$MSE), ]
+cat("Optimal Moving Average Period:", optimal$Period,"with MSE:", optimal$MSE, "\n")
